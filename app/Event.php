@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $table = 'EVENT';
+    protected $table = 'event';
 
     /**
      * The attributes that are mass assignable.
@@ -14,9 +14,9 @@ class Event extends Model
      * @var array
      */
     protected $fillable = [
-        'NAME',
-        'START_DATE',
-        'END_DATE',
-        'ACTIVE_DAYS'
+        'name',
+        'start_date',
+        'end_date',
+        'active_days'
     ];
 }

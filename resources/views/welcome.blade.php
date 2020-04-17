@@ -10,10 +10,11 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <!-- Styles -->
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     </head>
     <body>
         <div id="app">
-            <example-component></example-component>
+            <calendar-component api_url="{{ url('api/event') }}"></calendar-component>
         </div>
 
         <script src="{{ asset('js/app.js') }}"></script>

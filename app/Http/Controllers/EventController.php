@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Event;
 use Illuminate\Http\Request;
+use App\Http\Resources\EventResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class EventController extends Controller
 {
@@ -14,18 +16,9 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        return EventResource::collection(Event::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,51 +28,29 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $eventId  = $request->input('eventId');
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Event $event)
-    {
-        //
-    }
+        $request->validate([
+            'eventName'  => 'required',
+            'startDate'  => 'required|date',
+            'endDate'    => 'required|date|after:startDate',
+            'daysActive' => 'required',
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Event $event)
-    {
-        //
-    }
+        $event = (!is_null($eventId)) ?
+            Event::findOrFail($eventId) : new Event();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Event $event)
-    {
-        //
-    }
+        $daysActive = json_encode($request->input('daysActive'));
+        $startDate  = $request->input('startDate');
+        $endDate    = $request->input('endDate');
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Event $event)
-    {
-        //
+        $event->name        = $request->input('eventName');
+        $event->start_date  = "{$startDate} 00:00:00";
+        $event->end_date    = "{$endDate} 23:59:59";
+        $event->active_days = $daysActive;
+        
+        if ($event->save()) {
+            return $event->id;
+        }
     }
 }
